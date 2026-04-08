@@ -1,0 +1,40 @@
+
+DESIGN CODE
+module counter_4bit (
+    input logic clk,
+    input logic reset,
+    output logic [3:0] count
+);
+
+    always_ff @(posedge clk) begin
+        if (reset)
+            count <= 4'b0000;
+        else
+            count <= count + 1;
+    end
+
+endmodule
+
+TESTBENCH CODE
+module counter_tb;
+
+    logic clk, reset;
+    logic [3:0] count;
+
+    counter_4bit uut (.clk(clk), .reset(reset), .count(count));
+
+    always #5 clk = ~clk;
+
+    initial begin
+        $dumpfile("counter.vcd");
+        $dumpvars(0, counter_tb);
+
+        clk = 0;
+        reset = 1;
+
+        #10 reset = 0;
+
+        #100 $finish;
+    end
+
+endmodule
