@@ -1,0 +1,47 @@
+
+Design Code
+module dff (
+    input logic clk,
+    input logic reset,   // Added reset
+    input logic d,
+    output logic q
+);
+
+    always_ff @(posedge clk) begin
+        if (reset)
+            q <= 0;      // Initialize
+        else
+            q <= d;
+    end
+
+endmodule
+
+Testbench code
+
+module dff_tb;
+
+    logic clk, reset, d;
+    logic q;
+
+    dff uut (.clk(clk), .reset(reset), .d(d), .q(q));
+
+    always #5 clk = ~clk;
+
+    initial begin
+        $dumpfile("dff.vcd");
+        $dumpvars(0, dff_tb);
+
+        clk = 0;
+        reset = 1;   // Start with reset ON
+        d = 0;
+
+        #10 reset = 0;  // Release reset
+
+        #10 d = 1;
+        #10 d = 0;
+        #10 d = 1;
+
+        #20 $finish;
+    end
+
+endmodule
