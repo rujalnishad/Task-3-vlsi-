@@ -1,0 +1,47 @@
+
+DESIGN CODE
+module register_4bit (
+    input logic clk,
+    input logic reset,
+    input logic [3:0] d,
+    output logic [3:0] q
+);
+
+    always_ff @(posedge clk) begin
+        if (reset)
+            q <= 4'b0000;
+        else
+            q <= d;
+    end
+
+endmodule
+
+
+TESTBENCH CODE
+module register_tb;
+
+    logic clk, reset;
+    logic [3:0] d;
+    logic [3:0] q;
+
+    register_4bit uut (.clk(clk), .reset(reset), .d(d), .q(q));
+
+    always #5 clk = ~clk;
+
+    initial begin
+        $dumpfile("register.vcd");
+        $dumpvars(0, register_tb);
+
+        clk = 0;
+        reset = 1;
+
+        #10 reset = 0;
+
+        #10 d = 4'b0001;
+        #10 d = 4'b1010;
+        #10 d = 4'b1111;
+
+        #20 $finish;
+    end
+
+endmodule
